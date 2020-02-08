@@ -1,0 +1,83 @@
+.bg {
+  background-color: #037EF3;
+  width: 100%;
+  height: 100%;
+}
+
+.gis.error_helper h2 {
+  font-size: 15px;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px !important;
+}
+
+.auth-index {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  align-content: center;
+}
+
+.auth-index .auth-form-section {
+  width: 400px;
+  margin: auto;
+}
+
+.auth-index .auth-form-section .form-section {
+  border-radius: 5px;
+  box-shadow: 0 5px 16px 0 rgba(29,33,41,0.5);
+}
+
+.auth-index .auth-form-section .form-section .form-header {
+  background-color: #037EF3;
+  text-align: center;
+  padding: 10px 0;
+  height: 50px;
+}
+
+.auth-index .auth-form-section .form-section .form-header h2 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.auth-index .auth-form-section .form-section .form-fields-section {
+  background-color: #FFF;
+  padding: 40px 40px 40px;
+  border-radius: 0 0 5px 5px;
+}
+
+.auth-index .auth-form-section p {
+  margin: 0;
+  font-size: 12px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.auth-index .auth-form-section .form-section .description {
+  color: #9B9B9B;
+}
+
+.auth-index .auth-form-section .input-field-style {
+  margin: 10px 0;
+  border: 1px solid #D4D4D4;
+  border-radius: 2px;
+  height: 40px;
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.auth-index .auth-form-section .login-btn {
+  border-radius: 2px;
+  background-color: #037EF3;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border: none;
+  height: 40px;
+  margin: 20px 0;
+}

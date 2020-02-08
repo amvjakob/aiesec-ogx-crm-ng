@@ -1,0 +1,46 @@
+<div class="container mt-5">
+  <h2>Hi<ng-container *ngIf="meName">, {{ meName }}!</ng-container></h2>
+
+  <div class="mt-4">
+    <h4>Latest updates to Trello</h4>
+
+    <ng-container *ngIf="logs; else loading">
+      
+      <ng-container *ngIf="logs.length; else noLogs">
+        <table class="table mt-3">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">New signups</th>
+              <th scope="col">Timestamp</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let log of logs.slice(-tableLen).reverse()">
+              <th scope="row">{{ log.id }} </th>
+              <td>{{ log.n }}</td>
+              <td>{{ log.stamp | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td [ngClass]="{'text-success': log.success == 1, 'text-danger': log.success == 0}">
+                {{ log.success == 1 ? 'Success' : 'Failure' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+
+      <ng-template #noLogs>
+        <p>There are no logs yet.</p>
+      </ng-template>
+
+    </ng-container>
+
+    <ng-template #loading>
+      <p>Loading...</p>
+    </ng-template>
+
+  </div>
+
+
+
+</div>

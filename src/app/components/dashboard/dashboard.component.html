@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/home">OGX CRM</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav mr-auto">
+        <a class="nav-item nav-link" routerLink="home" routerLinkActive='active'>Home <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" routerLink="members" routerLinkActive='active'>Manage members</a>
+        <a class="nav-item nav-link"routerLink="help" routerLinkActive='active'>Help</a>
+      </div>
+      <span class="nav-item text-muted logged-in-as mr-3" *ngIf="meName">Logged in as: {{ meName }}</span>
+      <button type="button" class="btn btn-outline-light" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">&copy; {{ today | date: 'yyyy' }} AIESEC LC Lausanne</span>
+  </div>
+</footer>

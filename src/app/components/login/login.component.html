@@ -1,0 +1,27 @@
+<div class="bg">
+  <div class="container auth-index">
+    <div class="auth-form-section">
+      <div class="gis error_helper" >
+        <h2 *ngIf="errorMsg">{{ errorMsg }}</h2>
+      </div>
+      <div class="form-section">
+        <div class="form-header">
+          <!--<img src="https://auth.aiesec.org/assets/a-icon-df02d2072bb6cee12c14b653468f0512a2aa950c11b235cdba0c9afcd8ee5bf7.svg">-->
+          <h2>OGX CRM</h2>
+        </div>
+        <div class="form-fields-section">
+          <p class="description">Please use your EXPA credentials to sign in.</p>
+
+          <form class="new_user" id="new_user" autocomplete="off" accept-charset="UTF-8">
+            <input autofocus="autofocus" class="input-field-style" [(ngModel)]="email" name="email" placeholder="Email" type="email">
+            <input autofocus="autofocus" class="input-field-style" [(ngModel)]="pwd" name="pwd" placeholder="Password" type="password">
+            <button type="submit" class="login-btn" data-disable-with="Log in"
+              [disabled]="submitting" (click)="onSubmit()">
+              <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i>Log in
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

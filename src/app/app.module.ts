@@ -1,18 +1,45 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './components/login/login.component';
+import { HttpClientModule } from '@angular/common/http';
+import { httpInterceptorProviders } from './http-interceptors';
+import { ApiService } from './services/api.service';
+import { AuthenticationService } from './services/authentication.service';
+import { IsAuthGuard } from './guards/is-auth.guard';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DashboardHomeComponent } from './components/dashboard-home/dashboard-home.component';
+import { DashboardHelpComponent } from './components/dashboard-help/dashboard-help.component';
+import { DashboardMembersComponent } from './components/dashboard-members/dashboard-members.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    DashboardComponent,
+    DashboardHomeComponent,
+    DashboardHelpComponent,
+    DashboardMembersComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgbModule
   ],
-  providers: [],
+  providers: [
+    httpInterceptorProviders,
+    ApiService,
+    AuthenticationService,
+    IsAuthGuard,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

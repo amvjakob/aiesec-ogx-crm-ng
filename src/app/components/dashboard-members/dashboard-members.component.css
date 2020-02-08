@@ -1,0 +1,11 @@
+.table td,
+.table th {
+  vertical-align: middle !important;
+}
+
+.username {
+  font-family: monospace;
+  font-size: 14px;
+  background: #eee;
+  padding: 4px;
+}

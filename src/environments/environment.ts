@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  meEndpoint: 'https://jpar.ch/ogx-crm/api/me.php',
+  apiEndpoint: 'https://jpar.ch/ogx-crm/api/api.php',
+  authEndpoint: 'https://jpar.ch/ogx-crm/api/login.php'
 };
 
 /*
