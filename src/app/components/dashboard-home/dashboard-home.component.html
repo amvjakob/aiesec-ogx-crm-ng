@@ -74,6 +74,7 @@
           </ngb-pagination>
         
           <select class="custom-select" style="width: auto" [(ngModel)]="logsPageLen">
+            <option [ngValue]="5">Show 5 lines</option>
             <option [ngValue]="10">Show 10 lines</option>
             <option [ngValue]="20">Show 20 lines</option>
             <option [ngValue]="50">Show 50 lines</option>
