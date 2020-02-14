@@ -24,7 +24,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   /**
-   * Get an entity from the ST API
+   * Get an entity from the OGX CRM API
    * @param dbName - name of the db in the API. Can be called via T.dbName
    * @param id - the id of the entity to be retrieved
    * @param options - additional query options
@@ -39,7 +39,7 @@ export class ApiService {
   }
 
   /**
-   * Get multiple entities from the ST API
+   * Get multiple entities from the OGX CRM API
    * @param dbName - name of the db in the API. Can be called via T.dbName
    * @param ids - the ids of the entities to be retrieved
    * @param options - additional query options
@@ -55,7 +55,7 @@ export class ApiService {
   }
 
   /**
-   * Get an entity from the ST API, with more specific filters
+   * Get an entity from the OGX CRM API, with more specific filters
    * @param dbName - name of the db in the API. Can be called via T.dbName
    * @param options - additional query options
    * @param result - default result to be returned in case of an error
@@ -74,7 +74,7 @@ export class ApiService {
   }
 
   /**
-   * Get multiple entities from the ST API, with more specific filters
+   * Get multiple entities from the OGX CRM API, with more specific filters
    * @param dbName - name of the db in the API. Can be called via T.dbName
    * @param options - additional query options
    * @param result - default result to be returned in case of an error
@@ -90,7 +90,7 @@ export class ApiService {
   }
 
   /**
-   * Get all entities of a special class from the ST API
+   * Get all entities of a special class from the OGX CRM API
    * @param dbName - name of the db in the API. Can be called via T.dbName
    * @param result - default result to be returned in case of an error
    */
@@ -105,7 +105,7 @@ export class ApiService {
   }
 
   /**
-   * Get data from the ST API
+   * Get data from the OGX CRM API
    * @param endpoint - the detailed API endpoint to GET a resource from
    * @param options - additional query map
    * @param onErrorResult - default value to return on error
@@ -115,7 +115,7 @@ export class ApiService {
   }
 
   /**
-   * Get data from the ST API
+   * Get data from the OGX CRM API
    * @param endpoint - the detailed API endpoint to GET a resource from
    * @param endpointFromApi - determines if endpoint is to be appended to base API url
    * @param options - additional query map
@@ -139,7 +139,7 @@ export class ApiService {
   }
 
   /**
-   * Post JSON data to the ST API
+   * Post JSON data to the OGX CRM API
    * @param endpoint - the detailed API endpoint to POST a resource to
    * @param body - entity to post
    * @param options - additional query map
@@ -151,7 +151,7 @@ export class ApiService {
   }
 
   /**
-     * Post JSON data to the ST API
+     * Post JSON data to the OGX CRM API
      * @param endpoint - the detailed API endpoint to POST a resource to
      * @param endpointFromApi - determines if endpoint is to be appended to base API url
      * @param body - entity to post
@@ -168,7 +168,7 @@ export class ApiService {
   }
 
   /**
-   * Post form data to the ST API
+   * Post form data to the OGX CRM API
    * @param endpoint - the detailed API endpoint to POST a resource to
    * @param body - entity to post
    * @param options - additional query map
@@ -180,7 +180,7 @@ export class ApiService {
   }
 
   /**
-   * Post form data to the ST API
+   * Post form data to the OGX CRM API
    * @param endpoint - the detailed API endpoint to POST a resource to
    * @param endpointFromApi - attach endpoint to API url or not
    * @param body - entity to post
@@ -201,7 +201,7 @@ export class ApiService {
 
 
   /**
-   * Post data to the ST API
+   * Post data to the OGX CRM API
    * @param endpoint - the detailed API endpoint to POST a resource to
    * @param body - entity to post
    * @param headers - optional request headers
@@ -213,7 +213,7 @@ export class ApiService {
   }
 
   /**
-   * Post data to the ST API
+   * Post data to the OGX CRM API
    * @param endpoint - the detailed API endpoint to POST a resource to
    * @param endpointFromApi - determines if endpoint is to be appended to base API url
    * @param body - entity to post
@@ -239,7 +239,7 @@ export class ApiService {
   }
 
   /**
-   * PUT data to the ST API
+   * PUT data to the OGX CRM API
    * @param endpoint - the detailed API endpoint to PUT a resource to
    * @param body - entity to put
    * @param headers - optional request headers
@@ -259,7 +259,7 @@ export class ApiService {
   }
 
   /**
-   * DELETE a resource from to the ST API
+   * DELETE a resource from to the OGX CRM API
    * @param endpoint - the detailed API endpoint to DELETE a resource from
    * @param headers - optional request headers
    * @param options - optional additional query map

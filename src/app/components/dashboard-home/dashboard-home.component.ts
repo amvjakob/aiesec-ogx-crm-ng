@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router } from '@angular/router';
 import { MeService } from 'src/app/services/me.service';
@@ -6,6 +6,8 @@ import { ApiService, QueryMap } from 'src/app/services/api.service';
 import { mergeMap } from 'rxjs/operators';
 import { Log } from 'src/app/models/log';
 import { of } from 'rxjs';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -16,15 +18,24 @@ export class DashboardHomeComponent implements OnInit {
 
   meName: string;
 
-  logs: Log[];
+  LOGS: Log[];
   private logDbName = 'push_log';
 
-  tableLen = 10;
+  logsPage = 1;
+  logsPageLen = 10;
+  logsLen = 1;
+
+  @ViewChild('closeModalButton', { read: false, static: false }) closeModalButton;
+  pushForm: FormGroup;
+  submitting: boolean = false;
+
+  errorMsg: string = '';
 
   constructor(
     private authenticationService: AuthenticationService,
     private api: ApiService,
     private router: Router,
+    private formBuilder: FormBuilder,
     public meService: MeService
   ) { }
 
@@ -33,6 +44,11 @@ export class DashboardHomeComponent implements OnInit {
       if (me) this.meName = this.meService.formatName();
     })
     this.getLogs();
+
+    // init push form
+    this.pushForm = this.formBuilder.group({
+      expa_id: new FormControl('', Validators.required),
+    });
   }
 
   private getLogs() {
@@ -49,7 +65,61 @@ export class DashboardHomeComponent implements OnInit {
         }
       })
     ).subscribe(logs => {
-      if (logs) this.logs = logs;
+      if (logs) {
+        this.LOGS = logs.reverse();
+        this.logsLen = logs.length;
+      } 
+    })
+  }
+
+  get logs(): Log[] {
+    return this.LOGS ?
+      this.LOGS
+        .map((log, i) => ({ id: this.LOGS.length - i, ...log }))
+        .slice((this.logsPage - 1) * this.logsPageLen, this.logsPage * this.logsPageLen) :
+      [];
+  }
+
+  cleanModal() {
+    this.submitting = false;
+    this.errorMsg = '';
+    this.pushForm.reset();
+  }
+
+  submitModal() {
+    const val = this.pushForm.value;
+    if (val.expa_id) {
+      this.errorMsg = '';
+      this.push(val.expa_id);
+    } else {
+      // show error message
+      this.errorMsg = 'Please fill out the form.';
+    }
+  }
+
+  public push(id?: number): void {
+    this.submitting = true;
+
+    const url = environment.pushEndpoint;
+    const params = id ? { 'id': `${id}` } : {};
+
+    this.api.httpGetAny<any>(url, false, params).subscribe(result => {
+      if (result) {
+        // close and clean modal
+        this.closeModalButton.nativeElement.click();
+
+        // reload logs
+        this.LOGS = null;
+        this.getLogs();
+      } else {
+        // show error message
+        this.submitting = false;
+        this.errorMsg = 'Something went wrong... Is the person on EXPA?';
+      }
+    }, _ => {
+      // show error message
+      this.submitting = false;
+      this.errorMsg = 'Something went wrong... Please get in touch ("Help" tab) if this error persists.';
     })
   }
 }
