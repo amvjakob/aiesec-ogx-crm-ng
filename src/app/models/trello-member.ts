@@ -4,5 +4,6 @@ export class TrelloMember {
   name: string;
   trello_username: string;
   trello_id: string;
+  expa_id: number;
   stamp: string;
 }

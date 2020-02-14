@@ -63,7 +63,8 @@ export class DashboardMembersComponent implements OnInit {
   setupMemberForm(): void {
     this.memberForm = this.formBuilder.group({
       name: new FormControl('', Validators.required),
-      trello_username: new FormControl('', Validators.required)
+      trello_username: new FormControl('', Validators.required),
+      expa_id: new FormControl('', Validators.required),
     });
   }
 
@@ -77,7 +78,8 @@ export class DashboardMembersComponent implements OnInit {
       this.editIndex = index;
       this.memberForm.patchValue({
         name: this.members[index].name,
-        trello_username: this.members[index].trello_username
+        trello_username: this.members[index].trello_username,
+        expa_id: this.members[index].expa_id
       })
     }    
   }
@@ -100,6 +102,7 @@ export class DashboardMembersComponent implements OnInit {
         lc_id: this.me['home_lc_id'],
         name: val.name,
         trello_username: val.trello_username,
+        expa_id: val.expa_id,
         stamp: moment().format()
       };
 
