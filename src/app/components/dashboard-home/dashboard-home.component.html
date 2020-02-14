@@ -28,9 +28,12 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cleanModal()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="submitting || pushForm.pristine"
-          (click)="submitModal()">Synchronize</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cleanModal()">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="submitting || pushForm.pristine" (click)="submitModal()">
+          <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i>Synchronize
+        </button>
       </div>
     </div>
   </div>
@@ -42,7 +45,7 @@
   <div class="mt-4">
     <h4>Latest updates to Trello</h4>
 
-    <ng-container *ngIf="logs; else loading">
+    <ng-container *ngIf="LOGS; else loading">
       
       <ng-container *ngIf="logs.length; else noLogs">
         <table class="table mt-3">
@@ -66,7 +69,7 @@
           </tbody>
         </table>
 
-        <div class="d-flex justify-content-between p-2">
+        <div class="d-flex justify-content-between p-2 pagination-secondary">
           <ngb-pagination [collectionSize]="logsLen" [(page)]="logsPage" [pageSize]="logsPageLen">
           </ngb-pagination>
         
@@ -88,7 +91,7 @@
       </p>
 
       <button type="button" class="btn btn-outline-primary mr-2" [disabled]="submitting" (click)="push()">
-        Synchronize</button>
+        <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Synchronize</button>
 
       <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#pushModal">
         Synchronize specific EP</button>
