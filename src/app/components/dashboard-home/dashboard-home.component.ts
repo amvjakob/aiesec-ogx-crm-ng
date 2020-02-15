@@ -75,7 +75,10 @@ export class DashboardHomeComponent implements OnInit {
   get logs(): Log[] {
     return this.LOGS ?
       this.LOGS
-        .map((log, i) => ({ id: this.LOGS.length - i, ...log }))
+        .map((log, i) => {
+          log.id = i + 1;
+          return log;
+        })
         .slice((this.logsPage - 1) * this.logsPageLen, this.logsPage * this.logsPageLen) :
       [];
   }
