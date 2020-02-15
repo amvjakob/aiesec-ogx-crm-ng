@@ -10,6 +10,7 @@ import { AuthenticationToken } from '../models/authentication-token';
 import { AuthenticationUser } from '../models/authentication-user';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { MeService } from './me.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -25,7 +26,8 @@ export class AuthenticationService {
   private loginStatusSource = new Subject<boolean>();
   loginStatus$ = this.loginStatusSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private me: MeService) { }
 
   public login(email: string, password: string): Observable<AuthenticationToken> {
     let user = new AuthenticationUser(email, password);
@@ -62,6 +64,8 @@ export class AuthenticationService {
   logout(): void {
     localStorage.removeItem(TOKEN);
     this.loginStatusSource.next(this.isLoggedIn());
+
+    this.me.setMe(null);
   }
 
   public isLoggedIn(): boolean {

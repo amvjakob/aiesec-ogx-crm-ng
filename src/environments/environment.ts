@@ -7,7 +7,8 @@ export const environment = {
   meEndpoint: 'https://ogx-crm.ch/api/me.php',
   apiEndpoint: 'https://ogx-crm.ch/api/api.php',
   authEndpoint: 'https://ogx-crm.ch/api/login.php',
-  pushEndpoint: 'https://ogx-crm.ch/api/push_manual.php'
+  pushEndpoint: 'https://ogx-crm.ch/api/push_manual.php',
+  adminId: 3886217
 };
 
 /*
