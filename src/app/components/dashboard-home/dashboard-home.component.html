@@ -70,7 +70,8 @@
         </table>
 
         <div class="d-flex justify-content-between p-2 pagination-secondary">
-          <ngb-pagination [collectionSize]="logsLen" [(page)]="logsPage" [pageSize]="logsPageLen">
+          <ngb-pagination [collectionSize]="logsLen" [(page)]="logsPage" [pageSize]="logsPageLen"
+            [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
           </ngb-pagination>
         
           <select class="custom-select" style="width: auto" [(ngModel)]="logsPageLen">
