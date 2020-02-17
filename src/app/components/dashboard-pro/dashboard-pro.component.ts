@@ -20,7 +20,7 @@ export class DashboardProComponent implements OnInit {
   private logDbName = 'push_log';
   private memberDbName = 'trello_members';
 
-  private lcs: {
+  public lcs: {
     name: string;
     id: number;
   }[];
