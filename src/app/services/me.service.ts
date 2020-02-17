@@ -1,48 +1,59 @@
-import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Injectable, EventEmitter } from '@angular/core';
+import { Subject, BehaviorSubject, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { mergeMap, map, shareReplay } from 'rxjs/operators';
+import { ApiService } from './api.service';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MeService {
 
-  me: any = null;
-  me$ = new BehaviorSubject<any>(null);
-  isAdmin$ = new BehaviorSubject<boolean>(false);
+  me$ = new Observable<any>();
+  isAdmin$ = new Observable<boolean>();
 
-  constructor() { }
+  constructor(
+    private api: ApiService
+  ) { }
 
-  public setMe(me: any): void {
-    this.me = me;
-    this.me$.next(me);
-    this.isAdmin$.next(this.isMeAdmin());
+  public loadMe(): void {
+    this.me$ = this.api.httpGetAny<any>(environment.meEndpoint, false, {}).pipe(
+      shareReplay(1)
+    )
+
+    this.isAdmin$ = this.me$.pipe(
+      map(me => this.isUserAdmin(me))
+    )
   }
 
-  public getMe(): any {
-    return this.me;
+  public deleteMe(): void {
+    this.me$ = of(null);
+    this.isAdmin$ = of(false);
   }
 
-  public isMeSet(): boolean {
-    return this.me != null;
+  public isUserAdmin(me: any): boolean {
+    return me && me.id && environment.adminIds.includes(me.id);
   }
 
-  public isMeAdmin(): boolean {
-    return this.me && this.me.id && this.me.id === environment.adminId;
-  }
-
-  public formatName(): string {
-    if (this.me) {
-      if (this.isMeAdmin()) {
+  public formatName(me: any): string {
+    if (me) {
+      if (this.isUserAdmin(me)) {
         return 'Admin';
       } else {
-        if (this.me.middle_names) {
-          return [this.me.first_name, this.me.middle_names.join(' '), this.me.last_name].join(' ');
+        if (me.middle_names) {
+          return [me.first_name, me.middle_names.join(' '), me.last_name].join(' ');
         } else {
-          return [this.me.first_name, this.me.last_name].join(' ');
+          return [me.first_name, me.last_name].join(' ');
         }
       }
     }
     return undefined;
+  }
+
+  get formatName$(): Observable<string> {
+    return this.me$.pipe(
+      map(me => this.formatName(me))
+    );
   }
 }

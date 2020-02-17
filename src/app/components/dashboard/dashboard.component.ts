@@ -12,31 +12,16 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-  meName: string;
   today: Date;
 
   constructor(
     private authService: AuthenticationService,
     private router: Router,
-    private api: ApiService,
-    private meService: MeService
+    private me: MeService
   ) { }
 
   ngOnInit() {
     this.today = new Date();
-    this.getMe();
-  }
-
-  private getMe(): void {
-    const token = this.authService.getAccessToken();
-    if (token) {
-      const url = environment.meEndpoint;
-
-      this.api.httpGetAny<any>(url, false, {}).subscribe(result => {
-        this.meService.setMe(result);
-        this.meName = this.meService.formatName();
-      })
-    }
   }
 
   logout() {

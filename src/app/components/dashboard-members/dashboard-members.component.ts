@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { TrelloMember } from 'src/app/models/trello-member';
 import * as moment from 'moment';
 import { of } from 'rxjs';
+import { CacheService } from 'src/app/services/cache.service';
 
 @Component({
   selector: 'app-dashboard-members',
@@ -14,9 +15,8 @@ import { of } from 'rxjs';
 })
 export class DashboardMembersComponent implements OnInit {
 
-  me: any;
-  members: TrelloMember[];
   private membersDbName = 'trello_members';
+  private home_lc_id = 0;
 
   @ViewChild('closeModalButton', { read: false, static: false }) closeModalButton;
   memberForm: FormGroup;
@@ -29,25 +29,30 @@ export class DashboardMembersComponent implements OnInit {
   errorMsg: string = '';
 
   constructor(
-    private meService: MeService,
+    private me: MeService,
+    private cache: CacheService,
     private api: ApiService,
     private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
-    this.getMembers();
+    if (!this.members) this.getMembers();
     this.setupMemberForm();
   }
 
+  get members(): TrelloMember[] {
+    return this.cache.members;
+  }
+
   getMembers(): void {
-    this.meService.me$.pipe(
+    this.me.me$.pipe(
       mergeMap(me => {
         if (me) {
-          this.me = me;
+          this.home_lc_id = me['home_lc_id'];
 
           const params: QueryMap = {
             'transform': '1',
-            'filter': `lc_id,eq,${me['home_lc_id']}`
+            'filter': `lc_id,eq,${this.home_lc_id}`
           };
 
           return this.api.getEntitiesByFilter<any[]>(this.membersDbName, params, [])
@@ -56,7 +61,7 @@ export class DashboardMembersComponent implements OnInit {
         }
       })
     ).subscribe(members => {
-      if (members) this.members = members as TrelloMember[];
+      if (members) this.cache.setMembers(members);
     })
   }
 
@@ -99,7 +104,7 @@ export class DashboardMembersComponent implements OnInit {
       this.errorMsg = '';
 
       const body = {
-        lc_id: this.me['home_lc_id'],
+        lc_id: this.home_lc_id,
         name: val.name,
         trello_username: val.trello_username,
         expa_id: val.expa_id,
@@ -122,7 +127,7 @@ export class DashboardMembersComponent implements OnInit {
         this.closeModalButton.nativeElement.click();
 
         // reload members
-        this.members = null;
+        this.cache.clearMembers();
         this.getMembers();
       } else {
         // show error message
@@ -149,7 +154,7 @@ export class DashboardMembersComponent implements OnInit {
           this.closeModalButton.nativeElement.click();
 
           // reload members
-          this.members = null;
+          this.cache.clearMembers();
           this.getMembers();
         } else {
           // show error message
@@ -169,7 +174,9 @@ export class DashboardMembersComponent implements OnInit {
         const memberId = this.members[index].id;
         this.api.httpDelete(`${this.membersDbName}/${memberId}`).subscribe(result => {
           // remove member
-          this.members.splice(index, 1);
+          let members = this.members;
+          members.splice(index, 1);
+          this.cache.setMembers(members);
         });
       }
     }

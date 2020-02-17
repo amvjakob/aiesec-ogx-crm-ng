@@ -40,12 +40,12 @@
 </div>
 
 <div class="container mt-5">
-  <h2>Hi<ng-container *ngIf="meName">, {{ meName }}!</ng-container></h2>
+  <h2>Hi<ng-container *ngIf="me.formatName$ | async as name">, {{ name }}</ng-container>!</h2>
 
   <div class="mt-4">
     <h4>Latest updates to Trello</h4>
 
-    <ng-container *ngIf="LOGS; else loading">
+    <ng-container *ngIf="logs; else loading">
       
       <ng-container *ngIf="logs.length; else noLogs">
         <table class="table mt-3">
@@ -105,7 +105,7 @@
     </ng-container>
 
     <ng-template #loading>
-      <p>Loading...</p>
+      <p><i class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Loading...</p>
     </ng-template>
 
   </div>

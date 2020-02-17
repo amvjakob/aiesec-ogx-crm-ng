@@ -6,6 +6,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DashboardHomeComponent } from './components/dashboard-home/dashboard-home.component';
 import { DashboardHelpComponent } from './components/dashboard-help/dashboard-help.component';
 import { DashboardMembersComponent } from './components/dashboard-members/dashboard-members.component';
+import { DashboardProComponent } from './components/dashboard-pro/dashboard-pro.component';
+import { IsAdminGuard } from './guards/is-admin.guard';
 
 
 const routes: Routes = [
@@ -19,7 +21,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: DashboardHomeComponent },
       { path: 'help', component: DashboardHelpComponent },
-      { path: 'members', component: DashboardMembersComponent }
+      { path: 'members', component: DashboardMembersComponent },
+      { path: 'admin', component: DashboardProComponent, canActivate: [IsAdminGuard] },
     ]
   }
 ];

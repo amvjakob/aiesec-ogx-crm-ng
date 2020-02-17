@@ -16,6 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardHomeComponent } from './components/dashboard-home/dashboard-home.component';
 import { DashboardHelpComponent } from './components/dashboard-help/dashboard-help.component';
 import { DashboardMembersComponent } from './components/dashboard-members/dashboard-members.component';
+import { IsAdminGuard } from './guards/is-admin.guard';
+import { DashboardProComponent } from './components/dashboard-pro/dashboard-pro.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { DashboardMembersComponent } from './components/dashboard-members/dashbo
     DashboardComponent,
     DashboardHomeComponent,
     DashboardHelpComponent,
-    DashboardMembersComponent
+    DashboardMembersComponent,
+    DashboardProComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +42,7 @@ import { DashboardMembersComponent } from './components/dashboard-members/dashbo
     ApiService,
     AuthenticationService,
     IsAuthGuard,
+    IsAdminGuard
   ],
   bootstrap: [AppComponent]
 })

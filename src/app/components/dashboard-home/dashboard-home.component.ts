@@ -8,6 +8,7 @@ import { Log } from 'src/app/models/log';
 import { of } from 'rxjs';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { CacheService } from 'src/app/services/cache.service';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -16,13 +17,10 @@ import { environment } from 'src/environments/environment';
 })
 export class DashboardHomeComponent implements OnInit {
 
-  meName: string;
-
-  LOGS: Log[];
   private logDbName = 'push_log';
 
   logsPage = 1;
-  logsPageLen = 10;
+  logsPageLen = 5;
   logsLen = 1;
 
   @ViewChild('closeModalButton', { read: false, static: false }) closeModalButton;
@@ -32,18 +30,14 @@ export class DashboardHomeComponent implements OnInit {
   errorMsg: string = '';
 
   constructor(
-    private authenticationService: AuthenticationService,
     private api: ApiService,
-    private router: Router,
     private formBuilder: FormBuilder,
-    public meService: MeService
+    public me: MeService,
+    private cache: CacheService
   ) { }
 
   ngOnInit() {
-    this.meService.me$.subscribe(me => {
-      if (me) this.meName = this.meService.formatName();
-    })
-    this.getLogs();
+    if (!this.logs) this.getLogs();
 
     // init push form
     this.pushForm = this.formBuilder.group({
@@ -52,7 +46,7 @@ export class DashboardHomeComponent implements OnInit {
   }
 
   private getLogs() {
-    this.meService.me$.pipe(
+    this.me.me$.pipe(
       mergeMap(me => {
         if (me) {
           const params: QueryMap = {
@@ -66,21 +60,20 @@ export class DashboardHomeComponent implements OnInit {
       })
     ).subscribe(logs => {
       if (logs) {
-        this.LOGS = logs.reverse();
-        this.logsLen = logs.length;
+        this.cache.setLogs(logs.reverse());
       } 
     })
   }
 
   get logs(): Log[] {
-    return this.LOGS ?
-      this.LOGS
+    return this.cache.logs ?
+      this.cache.logs
         .map((log, i) => {
-          log.id = this.LOGS.length - i;
+          log.id = this.cache.logs.length - i;
           return log;
         })
         .slice((this.logsPage - 1) * this.logsPageLen, this.logsPage * this.logsPageLen) :
-      [];
+      this.cache.logs;
   }
 
   cleanModal() {
@@ -112,7 +105,7 @@ export class DashboardHomeComponent implements OnInit {
         this.closeModalButton.nativeElement.click();
 
         // reload logs
-        this.LOGS = null;
+        this.cache.clearLogs();
         this.getLogs();
       } else {
         // show error message

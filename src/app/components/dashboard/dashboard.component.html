@@ -11,7 +11,15 @@
         <a class="nav-item nav-link" routerLink="members" routerLinkActive='active'>Manage members</a>
         <a class="nav-item nav-link" routerLink="help" routerLinkActive='active'>Help</a>
       </div>
-      <span class="nav-item text-muted logged-in-as mr-3" *ngIf="meName">Logged in as: {{ meName }}</span>
+      <span class="nav-item text-muted logged-in-as mr-3" *ngIf="me.formatName$ | async as name">
+        Logged in as:
+        <ng-container *ngIf="name == 'Admin'; else plainName">
+          <a routerLink="admin" class="text-muted logged-in-as">{{ name }}</a>
+        </ng-container>
+        <ng-template #plainName>
+          {{ name }}
+        </ng-template>
+      </span>
       <button type="button" class="btn btn-outline-light" (click)="logout()">Logout</button>
     </div>
   </div>

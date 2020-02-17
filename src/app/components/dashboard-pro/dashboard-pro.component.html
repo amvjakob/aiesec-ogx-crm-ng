@@ -1,0 +1,103 @@
+<div class="container mt-5">
+  <h2>Admin corner</h2>
+
+  <div class="mt-4">
+    <h4>Latest updates to Trello</h4>
+
+    <ng-container *ngIf="logs; else loadingLogs">
+
+      <table class="table mt-3">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">LC</th>
+            <th scope="col">New signups</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let log of logs; index as i">
+            <th scope="row">{{ log.id }} </th>
+            <td>{{ lcs && lcs.length > i ? lcs[i].name : undefined }}</td>
+            <td>{{ log.n | number }}</td>
+            <td>{{ log.stamp | date: 'dd.MM.yyyy HH:mm' }}</td>
+            <td [ngClass]="{'text-success': log.success == 1, 'text-danger': log.success == 0}">
+              {{ log.success == 1 ? 'Success' : 'Failure' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </ng-container>
+
+    <ng-template #loadingLogs>
+      <p><i class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Loading logs...</p>
+    </ng-template>
+
+  </div>
+
+  <div class="mt-5">
+    <h4>Trello members</h4>
+
+    <ng-container *ngIf="members; else loadingMembers">
+      <div class="accordion mt-4" id="accordion">
+        <div class="card" *ngFor="let lc of members; index as i">
+
+          <div class="card-header" id="heading{{i}}">
+            <h2 class="mb-0">
+              <button class="btn" type="button" data-toggle="collapse" [attr.data-target]="'#collapse'+i"
+                aria-expanded="true" [attr.aria-controls]="'collapse'+i">
+                <h5 class="mb-1">{{ lcs && lcs.length > i ? lcs[i].name : undefined }}</h5>
+              </button>
+            </h2>
+          </div>
+      
+          <div id="collapse{{i}}" class="collapse" [attr.aria-labelledby]="'heading'+i" data-parent="#accordion">
+            <div class="card-body">
+              
+              <ng-container *ngIf="lc.length; else noMembers">
+              
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Trello username</th>
+                      <th scope="col">EXPA ID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let member of lc; index as j">
+                      <th scope="row">{{ j + 1 }} </th>
+                      <td>
+                        {{ member.name }}
+                      </td>
+                      <td>
+                        <span class="username"> {{ member.trello_username }} </span>
+                      </td>
+                      <td>
+                        <span class="username"> {{ member.expa_id }} </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              
+              </ng-container>
+              <ng-template #noMembers>
+                <p>There are no members in this team yet.</p>
+              </ng-template>
+              
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #loadingMembers>
+      <p><i class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Loading members...</p>
+    </ng-template>
+  
+  </div>
+
+</div>
