@@ -43,73 +43,147 @@
   <h2>Hi<ng-container *ngIf="me.formatName$ | async as name">, {{ name }}</ng-container>!</h2>
 
   <div class="mt-4">
-    <h4>Latest updates to Trello</h4>
 
-    <ng-container *ngIf="logs; else loading">
-      
-      <ng-container *ngIf="logs.length; else noLogs">
-        <table class="table mt-3">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">New signups</th>
-              <th scope="col">Timestamp</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let log of logs">
-              <th scope="row">{{ log.id }} </th>
-              <td>{{ log.n | number }}</td>
-              <td>{{ log.stamp | date: 'dd.MM.yyyy HH:mm' }}</td>
-              <td [ngClass]="{'text-success': log.success == 1, 'text-danger': log.success == 0}">
-                {{ log.success == 1 ? 'Success' : 'Failure' }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="row">
 
-        <div class="d-flex justify-content-between p-2 pagination-secondary">
-          <ngb-pagination [collectionSize]="logsLen" [(page)]="logsPage" [pageSize]="logsPageLen"
-            [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-          </ngb-pagination>
-        
-          <select class="custom-select" style="width: auto" [(ngModel)]="logsPageLen">
-            <option [ngValue]="5">Show 5 lines</option>
-            <option [ngValue]="10">Show 10 lines</option>
-            <option [ngValue]="20">Show 20 lines</option>
-            <option [ngValue]="50">Show 50 lines</option>
-          </select>
+      <!-- LC info -->
+      <div class="col-md-8 mt-4">
+
+        <!-- LC summary -->
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="mb-3">Your LC at a glance</h4>
+
+            <ng-container *ngIf="stats; else loading">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ stats?.lc_name }}</h5>
+                      <p class="card-text">Your LC</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ nLogs(stats?.logs_period) }}</h5>
+                      <p class="card-text">Sign-ups since the beginning of the period</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ nLogs(stats?.logs_week) }}</h5>
+                      <p class="card-text">Sign-ups over the last 7 days</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="!isMobile()">
+                <div class="com-sm-12 mt-4" style="margin: auto;">
+                  <div [chart]="chart"></div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #loading>
+              <app-loading></app-loading>
+            </ng-template>
+            
+          </div>
         </div>
 
-      </ng-container>
-
-      <ng-template #noLogs>
-        <p>There are no logs yet.</p>
-      </ng-template>
-
-      <p class="text-black-50 mt-5">
-        The EXPA database is synchronized with Trello once a day every day. Press one of the buttons below to synchronize now.
-      </p>
-
-      <button type="button" class="btn btn-outline-primary mr-2" [disabled]="submitting" (click)="push()">
-        <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Synchronize</button>
-
-      <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#pushModal">
-        Synchronize specific EP</button>
-
-      <div class="alert alert-danger mt-2" role="alert" *ngIf="errorMsg">
-        {{ errorMsg }}
+        <!-- Latest push -->
+        <div class="row">
+          <div class="col-md-12 mt-4">
+            <h4>Latest updates to Trello</h4>
+            
+            <ng-container *ngIf="logs; else loading">
+            
+              <ng-container *ngIf="logs.length; else noLogs">
+                <table class="table mt-3">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">New signups</th>
+                      <th scope="col">Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let log of logs">
+                      <th scope="row">{{ log.id }} </th>
+                      <td>{{ log.n | number }}</td>
+                      <td>{{ log.stamp | date: 'HH:mm, dd MMMM yyyy' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+            
+              </ng-container>
+            
+              <ng-template #noLogs>
+                <p>There are no logs yet.</p>
+              </ng-template>
+            
+              <p class="text-black-50 mt-5">
+                The EXPA database is synchronized with Trello once a day every day. Press one of the buttons below to synchronize
+                now.
+              </p>
+            
+              <button type="button" class="btn btn-outline-primary mr-2" [disabled]="submitting" (click)="push()">
+                <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Synchronize</button>
+            
+              <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#pushModal">
+                Synchronize specific EP</button>
+            
+              <div class="alert alert-danger mt-2" role="alert" *ngIf="errorMsg">
+                {{ errorMsg }}
+              </div>
+            
+            </ng-container>
+            
+            <ng-template #loading>
+              <app-loading></app-loading>
+            </ng-template>
+          </div>
+        </div>
+        
       </div>
 
-    </ng-container>
-
-    <ng-template #loading>
-      <p><i class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Loading...</p>
-    </ng-template>
-
+      <!-- OGX CRM info -->
+      <div class="col-md-4 mt-4">
+        <h4 class="mb-3">Latest news</h4>
+        
+        <ng-container *ngIf="news; else loading">
+        
+          <ng-container *ngIf="news.length; else noNews">
+            
+            <ng-container *ngFor="let n of news">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ n.title }}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">{{ n.stamp | date: 'HH:mm, dd MMMM yyyy' }}</h6>
+                      <div class="card-text" [innerHTML]="n.text"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+        
+          </ng-container>
+        
+          <ng-template #noNews>
+            <p>There are no news yet.</p>
+          </ng-template>
+        
+        </ng-container>
+        
+        <ng-template #loading>
+          <app-loading></app-loading>
+        </ng-template>
+      </div>
+    </div>
   </div>
-
-
-
 </div>

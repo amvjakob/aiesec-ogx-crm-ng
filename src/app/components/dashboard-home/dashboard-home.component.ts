@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthenticationService } from 'src/app/services/authentication.service';
-import { Router } from '@angular/router';
 import { MeService } from 'src/app/services/me.service';
 import { ApiService, QueryMap } from 'src/app/services/api.service';
 import { mergeMap } from 'rxjs/operators';
@@ -9,6 +7,15 @@ import { of } from 'rxjs';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { CacheService } from 'src/app/services/cache.service';
+import { Chart } from 'angular-highcharts';
+import { DatePipe } from '@angular/common';
+import * as moment from 'moment';
+
+// number of logs to show
+const nLogs = 3;
+
+// number of news to show
+const nNews = 3;
 
 @Component({
   selector: 'app-dashboard-home',
@@ -18,10 +25,7 @@ import { CacheService } from 'src/app/services/cache.service';
 export class DashboardHomeComponent implements OnInit {
 
   private logDbName = 'push_log';
-
-  logsPage = 1;
-  logsPageLen = 5;
-  logsLen = 1;
+  private newsDbName = 'news';
 
   @ViewChild('closeModalButton', { read: false, static: false }) closeModalButton;
   pushForm: FormGroup;
@@ -29,15 +33,20 @@ export class DashboardHomeComponent implements OnInit {
 
   errorMsg: string = '';
 
+  chart: Chart = undefined;
+
   constructor(
+    public me: MeService,
     private api: ApiService,
     private formBuilder: FormBuilder,
-    public me: MeService,
+    private datePipe: DatePipe,
     private cache: CacheService
   ) { }
 
   ngOnInit() {
     if (!this.logs) this.getLogs();
+    if (!this.stats) this.getStats();
+    if (!this.news) this.getNews();
 
     // init push form
     this.pushForm = this.formBuilder.group({
@@ -45,13 +54,99 @@ export class DashboardHomeComponent implements OnInit {
     });
   }
 
-  private getLogs() {
+  private getStats(): void {
+    this.api.httpGetAny<any>(environment.statsEndpoint, false, {})
+      .subscribe(stats => {
+        this.cache.setStats(stats);
+        this.initChart(stats);
+      });
+  }
+
+  private getNews(): void {
+    const params: QueryMap = {
+      'order': 'id,desc',
+      'page': `1,${nNews}`,
+      'transform': '1',
+    };
+    this.api.getEntitiesByFilter<any[]>(this.newsDbName, params, [])
+      .subscribe(news => {
+        this.cache.setNews(news);
+      });
+  }
+
+  private initChart(stats: any): void {
+    const format = (stamp) => this.datePipe.transform(stamp, 'dd.MM.')
+    let data = [];
+    let addNewPoint = true;
+    (stats.logs_period as Log[]).forEach((el, i, arr) => {
+      if (addNewPoint) {
+        // add new point
+        data.push({
+          start: moment(el.stamp),
+          label: format(el.stamp),
+          value: el.n
+        })
+        addNewPoint = false;
+      } else {
+        // add value
+        data[data.length - 1].value += el.n;
+      }
+
+      // check next point
+      if (i == arr.length - 1 || moment(arr[i + 1].stamp).diff(data[data.length - 1].start, 'days', true) >= 1) {
+        addNewPoint = true;
+
+        // add label to previous point
+        //data[data.length - 1].label += ' - ' + format(el.stamp);
+      }
+    });
+
+    this.chart = new Chart({
+      chart: {
+        type: 'line'
+      },
+      title: {
+        text: 'Daily sign-ups'
+      },
+      credits: {
+        enabled: false
+      },
+      series: [
+        {
+          name: 'Daily sign-ups',
+          data: data.map(d => d.value),
+          type: 'spline'
+        }
+      ],
+      yAxis: [
+        {
+          title: {
+            text: 'Number of sign-ups'
+          }
+        }
+      ],
+      xAxis: [
+        {
+          labels: {
+            formatter: function () {
+              let index = this.pos
+              return Number.isInteger(index) ? data[index].label : '';
+            }
+          }
+        }
+      ]
+    });
+  }
+
+  private getLogs(): void {
     this.me.me$.pipe(
       mergeMap(me => {
         if (me) {
           const params: QueryMap = {
+            'order': 'id,desc',
+            'filter': `lc_id,eq,${me['home_lc_id']}`,
+            'page': `1,${nLogs}`,
             'transform': '1',
-            'filter': `lc_id,eq,${me['home_lc_id']}`
           };
           return this.api.getEntitiesByFilter<any[]>(this.logDbName, params, [])
         } else {
@@ -60,20 +155,25 @@ export class DashboardHomeComponent implements OnInit {
       })
     ).subscribe(logs => {
       if (logs) {
-        this.cache.setLogs(logs.reverse());
+        this.cache.setLogs(logs);
       } 
     })
   }
 
+  get stats(): any[] {
+    return this.cache.stats;
+  }
+
   get logs(): Log[] {
-    return this.cache.logs ?
-      this.cache.logs
-        .map((log, i) => {
-          log.id = this.cache.logs.length - i;
-          return log;
-        })
-        .slice((this.logsPage - 1) * this.logsPageLen, this.logsPage * this.logsPageLen) :
-      this.cache.logs;
+    return this.cache.logs;
+  }
+
+  get news(): any[] {
+    return this.cache.news;
+  }
+
+  public nLogs(logs: any[]) {
+    return logs ? logs.reduce((acc, curr) => acc + curr['n'], 0) : 0;
   }
 
   cleanModal() {
@@ -117,5 +217,11 @@ export class DashboardHomeComponent implements OnInit {
       this.submitting = false;
       this.errorMsg = 'Something went wrong... Please get in touch ("Help" tab) if this error persists.';
     })
+  }
+
+  public isMobile() {
+    var ua = navigator.userAgent;
+
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua);
   }
 }

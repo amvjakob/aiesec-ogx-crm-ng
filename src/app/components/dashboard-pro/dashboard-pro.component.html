@@ -13,7 +13,6 @@
             <th scope="col">LC</th>
             <th scope="col">New signups</th>
             <th scope="col">Timestamp</th>
-            <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -21,10 +20,7 @@
             <th scope="row">{{ log.id }} </th>
             <td>{{ lcs && lcs.length > i ? lcs[i].name : undefined }}</td>
             <td>{{ log.n | number }}</td>
-            <td>{{ log.stamp | date: 'dd.MM.yyyy HH:mm' }}</td>
-            <td [ngClass]="{'text-success': log.success == 1, 'text-danger': log.success == 0}">
-              {{ log.success == 1 ? 'Success' : 'Failure' }}
-            </td>
+            <td>{{ log.stamp | date: 'HH:mm, dd MMMM yyyy' }}</td>
           </tr>
         </tbody>
       </table>
@@ -32,7 +28,7 @@
     </ng-container>
 
     <ng-template #loadingLogs>
-      <p><i class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Loading logs...</p>
+      <app-loading></app-loading>
     </ng-template>
 
   </div>
@@ -95,7 +91,7 @@
       </div>
     </ng-container>
     <ng-template #loadingMembers>
-      <p><i class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Loading members...</p>
+      <app-loading></app-loading>
     </ng-template>
   
   </div>

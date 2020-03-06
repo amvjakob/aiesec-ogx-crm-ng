@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { ChartModule } from 'angular-highcharts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,8 @@ import { DashboardHelpComponent } from './components/dashboard-help/dashboard-he
 import { DashboardMembersComponent } from './components/dashboard-members/dashboard-members.component';
 import { IsAdminGuard } from './guards/is-admin.guard';
 import { DashboardProComponent } from './components/dashboard-pro/dashboard-pro.component';
+import { LoadingComponent } from './components/loading/loading.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { DashboardProComponent } from './components/dashboard-pro/dashboard-pro.
     DashboardHomeComponent,
     DashboardHelpComponent,
     DashboardMembersComponent,
-    DashboardProComponent
+    DashboardProComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -35,14 +38,16 @@ import { DashboardProComponent } from './components/dashboard-pro/dashboard-pro.
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    ChartModule
   ],
   providers: [
     httpInterceptorProviders,
     ApiService,
     AuthenticationService,
     IsAuthGuard,
-    IsAdminGuard
+    IsAdminGuard,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

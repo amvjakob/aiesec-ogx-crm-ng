@@ -9,12 +9,16 @@ export class CacheService {
 
   private _logs: Log[] = undefined;
   private _members: TrelloMember[] = undefined;
+  private _stats: any = undefined;
+  private _news: any[] = undefined;
 
   constructor() { }
 
   public clear(): void {
     this.clearLogs();
     this.clearMembers();
+    this.clearStats();
+    this.clearNews();
   }
 
   public setLogs(logs: Log[]): void {
@@ -30,6 +34,20 @@ export class CacheService {
   public clearMembers(): void {
     this.setMembers(undefined);
   }
+
+  public setStats(stats: any): void {
+    this._stats = stats;
+  }
+  public clearStats(): void {
+    this.setStats(undefined);
+  }
+
+  public setNews(news: any[]): void {
+    this._news = news;
+  }
+  public clearNews(): void {
+    this.setNews(undefined);
+  }
   
   get logs(): Log[] {
     return this._logs;
@@ -37,6 +55,14 @@ export class CacheService {
 
   get members(): TrelloMember[] {
     return this._members;
+  }
+
+  get stats(): any {
+    return this._stats;
+  }
+
+  get news(): any[] {
+    return this._news;
   }
   
 }
