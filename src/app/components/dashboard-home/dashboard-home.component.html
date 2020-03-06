@@ -59,7 +59,7 @@
                 <div class="col-sm-4">
                   <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">{{ stats?.lc_name }}</h5>
+                      <h5 class="card-title">{{ stats['lc_name'] }}</h5>
                       <p class="card-text">Your LC</p>
                     </div>
                   </div>
@@ -67,7 +67,7 @@
                 <div class="col-sm-4">
                   <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">{{ nLogs(stats?.logs_period) }}</h5>
+                      <h5 class="card-title">{{ nLogs(stats['logs_period']) }}</h5>
                       <p class="card-text">Sign-ups since the beginning of the period</p>
                     </div>
                   </div>
@@ -75,7 +75,7 @@
                 <div class="col-sm-4">
                   <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">{{ nLogs(stats?.logs_week) }}</h5>
+                      <h5 class="card-title">{{ nLogs(stats['logs_week']) }}</h5>
                       <p class="card-text">Sign-ups over the last 7 days</p>
                     </div>
                   </div>
