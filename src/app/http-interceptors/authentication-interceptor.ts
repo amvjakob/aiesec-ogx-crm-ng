@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpEvent, HttpInterceptor, HttpHandler, HttpRequest
+  HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, HttpEventType
 } from '@angular/common/http';
 
 import * as moment from 'moment';
@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 import { AuthenticationService, TOKEN } from '../services/authentication.service';
 import { AuthenticationToken } from '../models/authentication-token';
 import { environment } from 'src/environments/environment';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -38,15 +39,25 @@ export class AuthInterceptor implements HttpInterceptor {
       if (!environment.production)
         console.log(`Authorized request: ${cloned.method} ${cloned.urlWithParams}`);
 
-      return next.handle(cloned);
+      return next.handle(cloned); /*.pipe(
+        tap(result => {
+          if (result.type === HttpEventType.Response) {
+            if (result.body && result.body.code && result.body.code === 403 && result.body.message) {
+              // token is not valid
+              this.authService.logout(true);
+            }
+          }
+        })
+      );*/
     } else {
       // console.log(`Logging in before request: ${req.method} ${req.urlWithParams}`);
       
       // user doesn't have a valid token, and is not trying to log in
       // --> request will get denied
+      // --> we logout user
 
       if (!environment.production)
-        console.log(`Unauthorized request: ${req.method} ${req.urlWithParams}`);
+        console.log(`Unauthorized request: ${req.method} ${req.urlWithParams}`);      
 
       return next.handle(req);
     }

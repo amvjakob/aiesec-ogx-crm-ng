@@ -7,6 +7,7 @@ import { TrelloMember } from 'src/app/models/trello-member';
 import * as moment from 'moment';
 import { of } from 'rxjs';
 import { CacheService } from 'src/app/services/cache.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-dashboard-members',
@@ -48,7 +49,7 @@ export class DashboardMembersComponent implements OnInit {
     this.me.me$.pipe(
       mergeMap(me => {
         if (me) {
-          this.home_lc_id = me['home_lc_id'];
+          this.home_lc_id = this.me.isUserMCVPOGX(me) ? environment.mcID : me['home_lc_id'];
 
           const params: QueryMap = {
             'transform': '1',

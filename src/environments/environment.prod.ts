@@ -6,5 +6,8 @@ export const environment = {
   authEndpoint: 'https://ogx-crm.ch/api/login.php',
   pushEndpoint: 'https://ogx-crm.ch/api/push_manual.php',
   statsEndpoint: 'https://ogx-crm.ch/api/trello_stats.php',
-  adminIds: [3886217]
+  adminIds: [3886217],
+  mcvpogxId: 912164,
+  host: 'https://ogx-crm.ch',
+  mcID: 2331
 };

@@ -144,7 +144,7 @@ export class DashboardHomeComponent implements OnInit {
         if (me) {
           const params: QueryMap = {
             'order': 'id,desc',
-            'filter': `lc_id,eq,${me['home_lc_id']}`,
+            'filter': `lc_id,eq,${this.me.isUserMCVPOGX(me) ? environment.mcID : me['home_lc_id']}`,
             'page': `1,${nLogs}`,
             'transform': '1',
           };
@@ -193,11 +193,16 @@ export class DashboardHomeComponent implements OnInit {
     }
   }
 
+  public pushAll(): void {
+    this.push(-1);
+  }
+
   public push(id?: number): void {
     this.submitting = true;
 
     const url = environment.pushEndpoint;
-    const params = id ? { 'id': `${id}` } : {};
+    let params = id && id >= 0 ? { 'id': `${id}` } : {};
+    if (id && id < 0) params['all'] = 'true';
 
     this.api.httpGetAny<any>(url, false, params).subscribe(result => {
       if (result) {

@@ -10,16 +10,47 @@
           <h2>OGX CRM</h2>
         </div>
         <div class="form-fields-section">
-          <p class="description">Please use your EXPA credentials to sign in.</p>
-
-          <form class="new_user" id="new_user" autocomplete="off" accept-charset="UTF-8">
-            <input autofocus="autofocus" class="input-field-style" [(ngModel)]="email" name="email" placeholder="Email" type="email">
-            <input autofocus="autofocus" class="input-field-style" [(ngModel)]="pwd" name="pwd" placeholder="Password" type="password">
-            <button type="submit" class="login-btn" data-disable-with="Log in"
-              [disabled]="submitting" (click)="onSubmit()">
-              <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i>Log in
-            </button>
-          </form>
+          <ng-container *ngIf="!submitting; else loading">
+            <div class="alert alert-danger" role="alert">
+              <strong>Important!</strong><br />
+              EXPA has decided to change its login procedure. As a result, the login procedure has changed for OGX CRM as
+              well:<br />
+              <ol class="mt-2">
+                <li>Drag the button below to your bookmarks bar.</li>
+                <li>Log in on <a href="https://expa.aiesec.org" class="alert-link" target="_blank">EXPA &raquo;</a></li>
+                <li>Click the new bookmark and it will take you to OGX CRM.</li>
+              </ol>
+              Due to these unfortunate circumstances, the automatic synchronization of EPs can not be guaranteed anymore.
+              However, you can still perform manual synchronizations after logging in.
+            </div>
+            
+            <p class="mb-0 pb-2">Drag this button to your bookmarks bar:</p>
+            <a href="javascript:(function(){
+            	var token = document.cookie.split(';').find(c => c.includes('expa_token'));
+            	if (token) {
+                var json = token.split('=')[1];
+                window.location = 'http://localhost:4200/login?token=' + json;
+            	} else {
+            		alert('Token not found.');
+            	}
+            })()" class="btn btn-dark" style="display: block;">OGX CRM</a>
+            
+            <!--
+                            // window.location = 'https://ogx-crm.ch/login?token=' + token;
+            
+                      <form class="new_user" id="new_user" autocomplete="off" accept-charset="UTF-8">
+                        <input autofocus="autofocus" class="input-field-style" [(ngModel)]="email" name="email" placeholder="Email" type="email">
+                        <input autofocus="autofocus" class="input-field-style" [(ngModel)]="pwd" name="pwd" placeholder="Password" type="password">
+                        <button type="submit" class="login-btn" data-disable-with="Log in"
+                          [disabled]="submitting" (click)="onSubmit()">
+                          <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i>Log in
+                        </button>
+                      </form>
+                      -->
+          </ng-container>
+          <ng-template #loading>
+            <app-loading></app-loading>
+          </ng-template>
         </div>
       </div>
     </div>

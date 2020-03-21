@@ -132,6 +132,9 @@
             
               <button type="button" class="btn btn-outline-primary mr-2" [disabled]="submitting" (click)="push()">
                 <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Synchronize</button>
+
+              <button *ngIf="me.isMCVPOGX$ | async" type="button" class="btn btn-outline-secondary mr-2" [disabled]="submitting" (click)="pushAll()">
+                <i *ngIf="submitting" class="fa fa-spinner fa-spin" style="margin-right: 5px;"></i> Synchronize all</button>
             
               <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#pushModal">
                 Synchronize specific EP</button>

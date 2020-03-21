@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MeService } from './me.service';
 import { CacheService } from './cache.service';
+import { Router } from '@angular/router';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -34,14 +35,22 @@ export class AuthenticationService {
   public login(email: string, password: string): Observable<AuthenticationToken> {
     let user = new AuthenticationUser(email, password);
 
-    return this.http.post<AuthenticationToken>(environment.authEndpoint, user, httpOptions).pipe(
-      tap(tokenJson => this.setSession(tokenJson)),
-      
-      shareReplay() // prevent accidental additional calls
-    );
+    return this.http
+      .post<AuthenticationToken>(environment.authEndpoint, user, httpOptions)
+      .pipe(
+        tap(tokenJson => this.setSession(tokenJson)),
+        shareReplay() // prevent accidental additional calls
+      );
   }
 
-  private setSession(authResult: AuthenticationToken): void {
+  public checkToken(token: AuthenticationToken): Observable<boolean> {
+    this.setSession(token);
+    return this.me.me$.pipe(
+      tap(m => m && m.code && m.code === 403 && m.message ? this.logout() : null)
+    )
+  }
+
+  public setSession(authResult: AuthenticationToken): void {
     if (authResult) {
       localStorage.setItem(TOKEN, JSON.stringify(authResult));
       this.loginStatusSource.next(this.isLoggedIn());
