@@ -38,11 +38,11 @@ export class MeService {
   }
 
   public isUserAdmin(me: any): boolean {
-    return me && me.id && environment.adminIds.includes(me.id);
+    return me && me.id && me.email && me.is_admin;
   }
 
   public isUserMCVPOGX(me: any): boolean {
-    return me && me.id && me.email && me.id === environment.mcvpogxId;
+    return me && me.id && me.email && me.is_mcvp_ogx;
   }
 
   public formatName(me: any): string {

@@ -10,11 +10,9 @@ export const environment = {
   authEndpoint: 'https://ogx-crm.ch/api/login.php',
   pushEndpoint: 'https://ogx-crm.ch/api/push_manual.php',
   statsEndpoint: 'https://ogx-crm.ch/api/trello_stats.php',
-  adminIds: [3886217],
-  mcvpogxId: 912164,
   host: 'http://localhost:4200',
   mcID: 2331
-};
+}; 
 
 /*
  * For easier debugging in development mode, you can import the following file

@@ -25,15 +25,15 @@
             </div>
             
             <p class="mb-0 pb-2">Drag this button to your bookmarks bar:</p>
-            <a href="javascript:(function(){
-            	var token = document.cookie.split(';').find(c => c.includes('expa_token'));
-            	if (token) {
-                var json = token.split('=')[1];
-                window.location = 'https://ogx-crm.ch/login?token=' + json;
-            	} else {
-            		alert('Token not found.');
-            	}
-            })()" class="btn btn-dark" style="display: block;">OGX CRM</a>
+            <a href="javascript:(function() {
+  var token = document.cookie.split(';').find(c => c.includes('access_token'));
+  if (token) {
+    var json = token.split('=')[1];
+    window.location = 'https://ogx-crm.ch/login?token=' + json;
+  } else {
+    alert('Token not found.');
+  }
+})()" class="btn btn-dark" style="display: block;">OGX CRM</a>
             
             <!--            
                       <form class="new_user" id="new_user" autocomplete="off" accept-charset="UTF-8">
